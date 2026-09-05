@@ -1,0 +1,10 @@
+[Unit]
+Description=Path Unit to restart tested service on file-change :-)
+
+[Path]
+PathChanged=/opt/void/bugsnitch/service.js
+Unit=restart-bugsnitch.service
+
+
+[Install]
+WantedBy=multi-user.target

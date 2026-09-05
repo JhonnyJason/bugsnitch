@@ -2,21 +2,30 @@
 
 ############################################################
 #region removeStuff
-systemctl stop tested.socket
-systemctl stop tested.service
-rm /run/tested.sk
+systemctl stop bugsnitch.socket
+systemctl stop bugsnitch.service
+systemctl stop bugsnitch.path
+
+rm /run/bugsnitch.sk
+
 #endregion
 
 ############################################################
 #region copyStuff
-cp tested.service /etc/systemd/system/
-cp tested.socket /etc/systemd/system/
-cp nginx-config /etc/nginx/servers/tested
+cp bugsnitch.service /etc/systemd/system/
+cp bugsnitch.socket /etc/systemd/system/
+cp bugsnitch.path /etc/systemd/system/
+cp restart-bugsnitch.service /etc/systemd/system/
+
 #endregion
 
 ############################################################
-#region reloadAndRestart
+./mount-files.sh
+
+############################################################
+#region reloadAnd(Re)start
 systemctl daemon-reload
-systemctl start tested.socket
-nginx -s reload
+systemctl start bugsnitch.socket
+systemctl start bugsnitch.path
+
 #endregion
