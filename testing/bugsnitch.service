@@ -1,5 +1,8 @@
 [Unit]
-Description=tested service :-)
+Description=Tested bugsnitch service :-)
+
+Requires=bugsnitch.socket
+After=bugsnitch.socket
 
 [Service]
 User=services

@@ -11,9 +11,15 @@ REALUID=$(stat -c %u "$SERVICEJS")
 REALGID=$(stat -c %g "$SERVICEJS")
 # echo "File Owners ${REALUID}:${REALGID}"
 
-MNTPATH="/opt/void/bugsnitch/service.js"
+BASEPATH="/opt/void/bugsnitch" 
+MNTPATH="${BASEPATH}/service.js"
+
 
 # ensure clean mountpount
+if [ ! -d "$BASEPATH" ]; then
+    mkdir -p "$BASEPATH" # create base path if it does not exist yet
+fi
+
 if mountpoint -q "$MNTPATH"; then
     umount "$MNTPATH" # unmount if something is mounted
 fi
@@ -66,10 +72,13 @@ TESTWD="./testing-wd"
 MNTPATH="/srv/srvcs/bugsnitch"
 
 # ensure clean mountpount
+if [ ! -d "$MNTPATH" ]; then
+    mkdir -p "$MNTPATH" # mount path if it does not exist yet
+fi
+
 if mountpoint -q "$MNTPATH"; then
     umount "$MNTPATH" # unmount if something is mounted
 fi
-touch "$MNTPATH" # ensure we have something to mount on
 
 mount --bind "$TESTWD" "$MNTPATH"
-setfacl -R -d -m "u:$USER:rwx" "$MNTPATH"
+setfacl -R -d -m "u:${USER}:rwx" "$MNTPATH"
