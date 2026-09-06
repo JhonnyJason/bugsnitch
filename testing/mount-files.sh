@@ -81,4 +81,5 @@ if mountpoint -q "$MNTPATH"; then
 fi
 
 mount --bind "$TESTWD" "$MNTPATH"
-setfacl -R -d -m "u:${USER}:rwx" "$MNTPATH"
+setfacl -R -m "u:$USER:rwx" "$MNTPATH"
+setfacl -R -d -m "u:$USER:rwx" "$MNTPATH"
