@@ -10,6 +10,7 @@ Group=services
 
 ExecStart=/usr/bin/node /opt/void/bugsnitch/service.js
 WorkingDirectory=/srv/srvcs/bugsnitch/
+RuntimeDirectory=bugsnitch
 
 Environment=SOCKETMODE=true
 Restart=no
