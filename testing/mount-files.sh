@@ -4,6 +4,8 @@
 set -euo pipefail
 
 USER="services" # user for test-running the service
+TARGETUID=$(id -u "$USER") # get uid = target uid
+TARGETGID=$(id -g "$USER") # get gid = target gid
 
 # service.js
 SERVICEJS="../output/service.js"
@@ -69,6 +71,9 @@ mount --bind -o "X-mount.idmap=u:${REALUID}:0:1 g:${REALGID}:0:1" "$SERVICEJS" "
 
 # testing-wd
 TESTWD="./testing-wd"
+REALUID=$(stat -c %u "$TESTWD")
+REALGID=$(stat -c %g "$TESTWD")
+
 MNTPATH="/srv/srvcs/bugsnitch"
 
 # ensure clean mountpount
@@ -80,6 +85,12 @@ if mountpoint -q "$MNTPATH"; then
     umount "$MNTPATH" # unmount if something is mounted
 fi
 
-mount --bind "$TESTWD" "$MNTPATH"
-setfacl -R -m "u:$USER:rwx" "$MNTPATH"
-setfacl -R -d -m "u:$USER:rwx" "$MNTPATH"
+# echo "${REALUID}:${TARGETUID}"
+# echo "${REALGID}:${TARGETGID}"
+
+# This id-mapped mount works as expected - but according to the manual it would be wrong
+mount --bind -o "X-mount.idmap=u:${REALUID}:${TARGETUID}:1 g:${REALGID}:${TARGETGID}:1" "$TESTWD" "$MNTPATH"
+
+# mount --bind "$TESTWD" "$MNTPATH"
+# setfacl -R -m "u:$USER:rwx" "$MNTPATH"
+# setfacl -R -d -m "u:$USER:rwx" "$MNTPATH"
